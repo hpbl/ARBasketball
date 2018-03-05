@@ -24,10 +24,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
         
         // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let scene = SCNScene()
         
         // Set the scene to the view
         sceneView.scene = scene
+        
+        // adding backboard node
+        self.addBackboard()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,5 +79,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         
+    }
+    
+    func addBackboard() {
+        guard let hoopScene = SCNScene(named: "art.scnassets/hoop.scn") else {
+            fatalError("Did not found art.scnassets/hoop.scn")
+        }
+        
+        guard let backboardNode = hoopScene.rootNode.childNode(
+            withName: "backboard",
+            recursively: false
+        ) else {
+            fatalError("backboard node not found")
+        }
+        
+        backboardNode.position = SCNVector3(0, 0.5, -3)
+        
+        self.sceneView.scene.rootNode.addChildNode(backboardNode)
     }
 }
